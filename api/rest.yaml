@@ -1,0 +1,641 @@
+openapi: 3.0.3
+info:
+  title: API for Vkontakte 
+  version: 1.0.0
+
+  description: |
+    # Общая информация
+    
+    Описание API произведено в формате **OpenAPI 3.0**.
+
+    - добавление и удаление друзей
+    - просмотр друзей пользователя
+    - вступление и выход из сообществ
+    - просмотр сообществ пользователя
+    - просмотр анкеты пользователей
+    - публикация поста в ленту
+    - просмотр ленты постов пользователя (своей и друзей)
+    - просмотр диалогов и чатов пользователя
+    - отправка и чтение сообщений из диалогов и чатов
+
+
+paths:
+  /user/{userId}/friends:
+    get:
+      tags:
+        - User
+      summary: Получить список друзей
+
+      operationId: getFriends
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/userModel'
+        '404':
+          $ref: '#/components/responses/404'
+    post:
+      tags:
+       - User
+      summary: Добавить друга
+      
+      operationId: addFriend
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/friendModel'
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          $ref: '#/components/responses/404'
+  /user/{userId}/friends/{friendId}:
+    delete:
+      tags:
+        - User
+      summary: Удалить друга
+      
+      operationId: deleteFriend
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/friendId'
+
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          $ref: '#/components/responses/404'
+          
+  /user/{userId}/dialogs:
+    get:
+      tags:
+        - User
+      summary: Получить список диалогов
+
+      operationId: getDialogs
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/dialogModel'
+        '404':
+          $ref: '#/components/responses/404'
+    post:
+      tags:
+       - User
+      summary: Создать диалог
+      
+      operationId: createDialog
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dialogModel'
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          $ref: '#/components/responses/404'
+  /user/{userId}/dialogs/{dialogId}:
+    get:
+      tags:
+        - User
+      summary: Получить содержимое диалога
+
+      operationId: getDialog
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/dialogId'
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/dialogModel'
+        '404':
+          $ref: '#/components/responses/404'
+    post:
+      tags:
+       - User
+      summary: Написать сообщение в диалог
+      
+      operationId: sentToDialog
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/dialogId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dialogModel'
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          $ref: '#/components/responses/404'
+          
+  /community/user/{userId}:
+    get:
+      tags:
+        - Community
+      summary: Получить сообщества пользователя
+
+      operationId: getCommunities
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/userModel'
+        '404':
+          $ref: '#/components/responses/404'
+          
+  /community/{communityId}/{userId}:
+    post:
+      tags:
+        - Community
+      summary: Вступить в сообщество
+
+      operationId: enterCommunity
+      parameters:
+        - $ref: '#/components/parameters/communityId'
+        - $ref: '#/components/parameters/userId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/userModel'
+        '404':
+          $ref: '#/components/responses/404'
+    delete:
+      tags:
+        - Community
+      summary: Покинуть сообщество
+
+      operationId: leaveCommunity
+      parameters:
+        - $ref: '#/components/parameters/communityId'
+        - $ref: '#/components/parameters/userId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/userModel'
+        '404':
+          $ref: '#/components/responses/404'
+          
+  /profile/{userId}:
+    get:
+      tags:
+        - Profile
+      summary: Получить анкету пользователя
+
+      operationId: getProfile
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/profileModel'
+        '404':
+          $ref: '#/components/responses/404'
+          
+  /feed/{userId}:
+    get:
+      tags:
+        - Feed
+      summary: Получить ленту пользователя
+
+      operationId: getFeed
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/feedModel'
+        '404':
+          $ref: '#/components/responses/404'
+
+    post:
+      tags:
+        - Feed
+      summary: Добавить пост в ленту пользователя
+
+      operationId: addFeed
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/feedModel'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/profileModel'
+        '404':
+          $ref: '#/components/responses/404'
+          
+  /chat/{userId}:
+    get:
+      tags:
+        - Chat
+      summary: Получить чаты пользователя
+
+      operationId: getChats
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/chatModel'
+        '404':
+          $ref: '#/components/responses/404'
+
+    post:
+      tags:
+        - Chat
+      summary: Добавить пост в чат
+
+      operationId: addPost
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/feedModel'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/profileModel'
+        '404':
+          $ref: '#/components/responses/404'
+  /chat/{userId}/{chatId}:
+    get:
+      tags:
+        - Chat
+      summary: Получить содержимое чата
+
+      operationId: getChat
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/chatId'
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/chatModel'
+        '404':
+          $ref: '#/components/responses/404'
+    post:
+      tags:
+       - Chat
+      summary: Написать сообщение в диалог
+      
+      operationId: sentToChat
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/chatId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/chatModel'
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          $ref: '#/components/responses/404'
+
+components:
+  parameters:
+    userId:
+      name: userId
+      in: path
+      required: true
+      description: Идентификатор пользователя
+      schema:
+        type: string
+    friendId:
+      name: friendId
+      in: path
+      required: true
+      description: Идентификатор друга
+      schema:
+        type: string
+    communityId:
+      name: communityId
+      in: path
+      required: true
+      description: Идентификатор сообщества
+      schema:
+        type: string
+    feedId:
+      name: feedId
+      in: path
+      required: true
+      description: Идентификатор ленты
+      schema:
+        type: string
+    chatId:
+      name: chatId
+      in: path
+      required: true
+      description: Идентификатор чата
+      schema:
+        type: string
+    dialogId:
+      name: dialogId
+      in: path
+      required: true
+      description: Идентификатор диалога
+      schema:
+        type: string
+  schemas:
+    userModel:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: Идентифиактор пользователя
+        username:
+          type: string
+          description: Имя пользователя
+        firstName:
+          type: string
+          description: Фамилия пользователя
+        lastName:
+          type: string
+          description: Отчество пользователя
+        email:
+          type: string
+          description: Email пользователя
+        phone:
+          type: string
+          description: Номер телефона пользователя
+        userOnline:
+          type: boolean
+          description: Online\Offline
+    
+    friendModel:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: Идентифиактор пользователя
+          
+    profileModel:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: Идентифиактор пользователя
+        username:
+          type: string
+          description: Имя пользователя
+        firstName:
+          type: string
+          description: Фамилия пользователя
+        lastName:
+          type: string
+          description: Отчество пользователя
+        email:
+          type: string
+          description: Email пользователя
+        phone:
+          type: string
+          description: Номер телефона пользователя
+        sex:
+          type: string
+          description: Пол
+        height:
+          type: integer
+          description: Рост
+        weight:
+          type: integer
+          description: Вес
+          
+    feedModel:
+      type: object
+      properties:
+        feedId:
+          type: string
+          format: uuid
+          description: Идентифиактор поста
+        theme:
+          type: string
+          description: Тема поста
+        text:
+          type: string
+          description: Текст
+          
+    chatModel:
+      type: object
+      properties:
+        chatId:
+          type: string
+          format: uuid
+          description: Идентифиактор чата
+          
+    dialogModel:
+      type: object
+      properties:
+        dialogId:
+          type: string
+          format: uuid
+          description: Идентифиактор диалога
+
+    errorResponseModel:
+      description: Модель ответа на основе RFC 7807
+      type: object
+      properties:
+        status: 
+          type: integer
+          format: int32
+          description: |
+            HTTP-код сгенерированный исходным сервером для конкретно этого типа проблемы.
+          minimum: 100
+          maximum: 600
+          example: 500
+        
+        type:
+          type: string
+          format: uri
+          description: |
+            Абсолютный путь, который идентифицирует тип проблемы.  Если присутствует в ответе то должен содержать человекочитаемую документацию для данного типа проблемы
+            (например с использованием HTML).
+          default: 'about:blank'
+          example: http://httpstatus.es/503
+
+        title:
+          type: string
+          description: |
+            Короткое описание проблемы на английском языке для чтения инженерами (обычно не локализированное). 
+          example: Service Unavailable
+        
+        detail:
+          type: string
+          description: |
+            Человекочитаемое объяснение, характерное для конкретно этого случая.
+          example: Таймут подключения к базе данных
+
+        instance:
+          type: string
+          format: uri
+          description: |
+            Абсолютный путь, который идентифицирует конкретно этот случай. Необязательно содержит дополнительную информацию если присутвует в ответе.
+
+  responses:
+    400:
+      description: Некорректные входные данные
+      content: 
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/errorResponseModel'
+
+    403:
+      description: Запрещено
+
+
+    404:
+      description: Не найден
+
+    429:
+      description: Слишком много запросов
+
+      content: 
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/errorResponseModel'
+
+    500:
+      description: Внутренняя ошибка сервера
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/errorResponseModel'    
+
+    503:
+      description: Сервис временно недоступен
