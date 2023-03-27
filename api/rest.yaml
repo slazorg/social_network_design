@@ -204,7 +204,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/userModel'
+                  $ref: '#/components/schemas/communityModel'
         '404':
           $ref: '#/components/responses/404'
           
@@ -221,12 +221,6 @@ paths:
       responses:
         '200':
           description: successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/userModel'
         '404':
           $ref: '#/components/responses/404'
     delete:
@@ -241,12 +235,6 @@ paths:
       responses:
         '200':
           description: successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/userModel'
         '404':
           $ref: '#/components/responses/404'
           
@@ -265,8 +253,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                items:
                   $ref: '#/components/schemas/profileModel'
         '404':
           $ref: '#/components/responses/404'
@@ -286,8 +272,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                items:
                   $ref: '#/components/schemas/feedModel'
         '404':
           $ref: '#/components/responses/404'
@@ -309,12 +293,6 @@ paths:
       responses:
         '200':
           description: successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/profileModel'
         '404':
           $ref: '#/components/responses/404'
           
@@ -348,7 +326,7 @@ paths:
                   $ref: '#/components/schemas/chatModel'
         '404':
           $ref: '#/components/responses/404'
-
+  /chat/{userId}/{chatId}:
     post:
       tags:
         - Chat
@@ -357,24 +335,19 @@ paths:
       operationId: addPost
       parameters:
         - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/chatId'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/feedModel'
+              $ref: '#/components/schemas/chatModel'
       responses:
         '200':
           description: successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/profileModel'
         '404':
           $ref: '#/components/responses/404'
-  /chat/{userId}/{chatId}:
+
     get:
       tags:
         - Chat
@@ -403,26 +376,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/chatModel'
-        '404':
-          $ref: '#/components/responses/404'
-    post:
-      tags:
-       - Chat
-      summary: Написать сообщение в диалог
-      
-      operationId: sentToChat
-      parameters:
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/chatId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/chatModel'
-      responses:
-        '200':
-          description: successful operation
         '404':
           $ref: '#/components/responses/404'
 
@@ -566,6 +519,14 @@ components:
           type: string
           format: uuid
           description: Идентифиактор диалога
+          
+    communityModel:
+      type: object
+      properties:
+        communityId:
+          type: string
+          format: uuid
+          description: Идентифиактор сообщества
 
     errorResponseModel:
       description: Модель ответа на основе RFC 7807

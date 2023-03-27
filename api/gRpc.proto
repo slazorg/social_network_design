@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+option csharp_namespace = "Vkontakte.Messaging";
+
+package vkontakte;
+
+service User {
+    rpc GetFriends (UserModelPagingRequest) returns (repeated UserModel);
+    rpc AddFriend (UserModelRequest) returns (EmptyResponse);
+    rpc DeleteFriend (DeleteFriendRequest) returns (EmptyResponse);
+    rpc GetDialogs (UserModelPagingRequest) returns (repeated DialogModel);
+    rpc CreateDialog (UserModelRequest) returns (DialogModel);
+    rpc GetDialog (DialogModelRequest) returns (DialogModel);
+    rpc SentToDialog () returns ();
+}
+
+message UserModelPagingRequest {
+    string userId = 1;
+    int32 offset = 2;
+    int32 limit = 3;
+}
+
+message UserModelRequest {
+    string userId = 1;
+}
+
+message UserModel {
+    string userId = 1;
+    string username = 2;
+    string firstName = 3;
+    string lastName = 4;
+    string email = 5;
+    string phone = 6;
+    bool userOnline = 7;
+}
+
+message EmptyResponse {}
+
+message DeleteFriendRequest {
+    string userId = 1;
+    string friendId = 2;
+}
+
+message DialogModel {
+    string dialogId = 1;
+    repeated string text = 2;
+}
+
+message DialogModelRequest {
+    string userId = 1;
+    string dialogId = 2;
+}
+
+service Community {
+    rpc GetCommunities () returns ();
+    rpc EnterCommunity () returns ();
+    rpc LeaveCommunity () returns ();
+}
+
+
+service Profile {
+    rpc GetProfile () returns ();
+}
+
+
+service Feed {
+    rpc GetFeed () returns ();
+    rpc AddFeed () returns ();
+}
+
+
+service Chat{
+    rpc GetChats () returns ();
+    rpc AddPost () returns ();
+    rpc GetChat () returns ();
+    rpc SentToChat () returns ();
+}
