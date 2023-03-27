@@ -8,10 +8,10 @@ service User {
     rpc GetFriends (UserModelPagingRequest) returns (repeated UserModel);
     rpc AddFriend (UserModelRequest) returns (EmptyResponse);
     rpc DeleteFriend (DeleteFriendRequest) returns (EmptyResponse);
-    rpc GetDialogs (UserModelPagingRequest) returns (repeated DialogModel);
+    rpc GetDialogs (UserModelPagingRequest) returns (DialogModel);
     rpc CreateDialog (UserModelRequest) returns (DialogModel);
     rpc GetDialog (DialogModelRequest) returns (DialogModel);
-    rpc SentToDialog () returns ();
+    rpc SentToDialog (DialogModel) returns (EmptyResponse);
 }
 
 message UserModelPagingRequest {
@@ -42,8 +42,12 @@ message DeleteFriendRequest {
 }
 
 message DialogModel {
-    string dialogId = 1;
-    repeated string text = 2;
+    string userId = 1;
+    message Dialog {
+        string dialogId = 1;
+        repeated string text = 2;
+    }
+    repeated Dialog dialog = 2;
 }
 
 message DialogModelRequest {
@@ -52,26 +56,77 @@ message DialogModelRequest {
 }
 
 service Community {
-    rpc GetCommunities () returns ();
-    rpc EnterCommunity () returns ();
-    rpc LeaveCommunity () returns ();
+    rpc GetCommunities (UserModelRequest) returns (CommunityModel);
+    rpc EnterCommunity (CommunityModelRequest) returns (EmptyResponse);
+    rpc LeaveCommunity (CommunityModelRequest) returns (EmptyResponse);
 }
 
+message CommunityModel {
+    string userId = 1;
+    message Community {
+        string communityId = 1;
+        string name = 2;
+    }
+    repeated Community community = 2;
+}
+
+message CommunityModelRequest {
+    string userId = 1;
+    string communityId = 2;  
+}
 
 service Profile {
-    rpc GetProfile () returns ();
+    rpc GetProfile (UserModelRequest) returns (ProfileModel);
 }
 
+message ProfileModel {
+    string userId = 1;
+    string username = 2;
+    string firstName = 3;
+    string lastName = 4;
+    string email = 5;
+    string phone = 6;
+    string sex = 7;
+    int32 height = 8;
+    int32 weight = 9;
+}
 
 service Feed {
-    rpc GetFeed () returns ();
-    rpc AddFeed () returns ();
+    rpc GetFeed (UserModelRequest) returns (FeedModel);
+    rpc AddFeed (UserModelRequest) returns (EmptyResponse);
 }
 
+message FeedModel {
+    string userId = 1;
+    repeated string text = 2;
+}
 
 service Chat{
-    rpc GetChats () returns ();
-    rpc AddPost () returns ();
-    rpc GetChat () returns ();
-    rpc SentToChat () returns ();
+    rpc GetChats (UserModelRequest) returns (ChatModelRepeated);
+    rpc AddPost (ChatModel) returns (EmptyResponse);
+    rpc GetChat (ChatModelRequest) returns (ChatModel);
+    rpc SentToChat (ChatModel) returns (EmptyResponse);
+}
+
+message ChatModelRepeated {
+    string userId = 1;
+    message Chat {
+        string chatId = 1;
+        repeated string text = 2;
+    }
+    repeated Chat chat = 2;
+}
+
+message ChatModel {
+    string userId = 1;
+    message Chat {
+        string chatId = 1;
+        repeated string text = 2;
+    }
+    Chat chat = 2;
+}
+
+message ChatModelRequest {
+    string userId = 1;
+    string chatId = 2;
 }
